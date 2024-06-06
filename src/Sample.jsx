@@ -6,6 +6,7 @@ export default function Sample(props) {
     <div>
       sample
       <div></div>
+      <div></div>
     </div>
   );
 }

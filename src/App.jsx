@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
 import Sample from "./sample";
-
 function App() {
   const da = [
     {
