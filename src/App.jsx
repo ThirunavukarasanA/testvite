@@ -1,32 +1,18 @@
 import React from "react";
 import "./App.css";
-import Sample from "./sample";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
 function App() {
-  const da = [
-    {
-      id: 0,
-      name: "fdsdfffg",
-      email: "fdfd@gma.co",
-      address: "dfghdfgjd",
-    },
-    {
-      id: 1,
-      name: "jhjhgjghj",
-      email: "hjjhgj@gma.co",
-      address: "riotuoriuejfdngbjfgi",
-    },
-    {
-      id: 2,
-      name: "etyutrtyt",
-      email: "yuyt@gma.co",
-      address: "kjhdjkvbmbjkghjhgjkfdf",
-    },
-  ];
-
   return (
     <>
-      <div>sddgfghhrghegu</div>
-      <Sample da={da} />
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+        </Routes>
+      </Router>
     </>
   );
 }
