@@ -4,98 +4,127 @@ const BlogReader = () => {
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [speed, setSpeed] = useState(1);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [words, setWords] = useState([]);
+    const [selectedVoice, setSelectedVoice] = useState(null);
 
-    const timerRef = useRef(null);
-    const wordSpans = useRef([]);
+    const synth = window.speechSynthesis;
+    const wordRefs = useRef([]);
+    const textContent = useRef("");
+    const utteranceRef = useRef(null);
 
+    // Load available voices
     useEffect(() => {
-        const tags = Array.from(document.querySelectorAll("h2, p"));
-        let all = [];
+        const loadVoices = () => {
+            const voices = synth.getVoices();
+            const englishVoice = voices.find(v => v.lang.startsWith("en")) || voices[0];
+            setSelectedVoice(englishVoice);
+        };
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = loadVoices;
+        }
+        loadVoices();
+    }, []);
+
+    // Wrap words in spans from real <h2> and <p> elements
+    useEffect(() => {
+        const tags = document.querySelectorAll("h2, p");
+        let fullText = "";
+        wordRefs.current = [];
 
         tags.forEach(tag => {
-            const split = tag.textContent.trim().match(/\S+|\s+/g) || [];
-            tag.innerHTML = "";
+            const text = tag.textContent;
+            fullText += text + " ";
+            const words = text.match(/\S+|\s+/g) || [];
+            tag.innerHTML = ""; // Clear
 
-            split.forEach((part, i) => {
+            words.forEach((word, i) => {
                 const span = document.createElement("span");
-                span.textContent = part;
+                span.textContent = word;
                 span.style.transition = "0.1s all";
+                span.style.whiteSpace = "pre-wrap";
                 tag.appendChild(span);
 
-                if (!/^\s+$/.test(part)) {
-                    all.push(span);
+                if (!/^\s+$/.test(word)) {
+                    wordRefs.current.push({ span, charStart: fullText.length - text.length + text.indexOf(word, i) });
                 }
-
-                wordSpans.current.push(span);
             });
         });
 
-        setWords(all);
+        textContent.current = fullText.trim();
     }, []);
-
-    const speakWord = (index) => {
-        if (!words[index] || isPaused) return;
-
-        const word = words[index].textContent;
-        const utter = new SpeechSynthesisUtterance(word);
-        utter.rate = speed;
-        window.speechSynthesis.speak(utter);
-
-        // Highlight
-        words.forEach((el, i) => {
-            el.style.background = i === index ? "#007bff" : "transparent";
-            el.style.color = i === index ? "#fff" : "#000";
-        });
-
-        words[index].scrollIntoView({ behavior: "smooth", block: "center" });
-
-        utter.onend = () => {
-            timerRef.current = setTimeout(() => {
-                if (!isPaused && index + 1 < words.length) {
-                    setCurrentIndex(index + 1);
-                    speakWord(index + 1);
-                } else {
-                    setIsSpeaking(false);
-                }
-            }, 100); // Small delay before next word
-        };
-    };
 
     const handlePlay = () => {
         if (isPaused) {
+            synth.resume();
             setIsPaused(false);
-            speakWord(currentIndex);
-        } else {
-            setCurrentIndex(0);
-            setIsPaused(false);
-            setIsSpeaking(true);
-            speakWord(0);
+            return;
         }
+
+        handleStop(); // cancel any existing
+        const utterance = new SpeechSynthesisUtterance(textContent.current);
+        utterance.voice = selectedVoice;
+        utterance.rate = speed;
+
+        utterance.onstart = () => {
+            setIsSpeaking(true);
+            setIsPaused(false);
+        };
+
+        utterance.onboundary = (event) => {
+            if (event.name === "word") {
+                const charIndex = event.charIndex;
+
+                for (let i = 0; i < wordRefs.current.length; i++) {
+                    const current = wordRefs.current[i];
+                    const next = wordRefs.current[i + 1]?.charStart ?? Infinity;
+
+                    if (charIndex >= current.charStart && charIndex < next) {
+                        wordRefs.current.forEach((ref, j) => {
+                            ref.span.style.background = j === i ? "#007bff" : "transparent";
+                            ref.span.style.color = j === i ? "#fff" : "#000";
+                        });
+                        current.span.scrollIntoView({ behavior: "smooth", block: "center" });
+                        break;
+                    }
+                }
+            }
+        };
+
+        utterance.onend = () => {
+            setIsSpeaking(false);
+            clearHighlight();
+        };
+
+        utterance.onerror = () => {
+            setIsSpeaking(false);
+            clearHighlight();
+        };
+
+        utteranceRef.current = utterance;
+        synth.speak(utterance);
     };
 
     const handlePause = () => {
-        window.speechSynthesis.cancel();
+        synth.pause();
         setIsPaused(true);
-        clearTimeout(timerRef.current);
     };
 
     const handleStop = () => {
-        window.speechSynthesis.cancel();
-        setIsPaused(false);
+        synth.cancel();
         setIsSpeaking(false);
-        setCurrentIndex(0);
-        clearTimeout(timerRef.current);
-        wordSpans.current.forEach(el => {
-            el.style.background = "transparent";
-            el.style.color = "#000";
+        setIsPaused(false);
+        clearHighlight();
+    };
+
+    const clearHighlight = () => {
+        wordRefs.current.forEach(({ span }) => {
+            span.style.background = "transparent";
+            span.style.color = "#000";
         });
     };
 
     return (
-        <div style={{ marginTop: "40px", fontFamily: "Arial", maxWidth: 800, margin: "auto" }}>
-            <h3>🔊 Precise Blog Reader</h3>
+        <div style={{ marginTop: 30, fontFamily: "Arial", maxWidth: 800, margin: "auto" }}>
+            <h3>🔊 Blog Reader – Synced with Real-Time Speech</h3>
             <button onClick={handlePlay} disabled={isSpeaking && !isPaused}>
                 ▶️ {isPaused ? "Resume" : "Play"}
             </button>
