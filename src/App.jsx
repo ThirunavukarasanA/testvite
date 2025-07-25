@@ -9,6 +9,8 @@ import MacMini from '/public/EMBASSY_Village_HD.mp4'
 import ProtectedVideoPlayer from "./components/ProtectedVideoPlayer";
 import SecureCanvasVideo from "./components/SecureCanvasVideo";
 import HLSPlayer from "./components/HLSPlayer";
+import BlogReader from "./components/BlogReader";
+import BlogCombine from "./components/BlogCombine";
 
 function App() {
   return (
@@ -20,6 +22,13 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </Router> */}
+      <Router>
+        <Routes>
+          <Route path="/" element={<HideImage imageUrl={Test} width={600} height={400} />} />
+          <Route path="/video-player" element={<HLSPlayer />} />
+          <Route path="/blog-reader" element={<BlogCombine />} />
+        </Routes>
+      </Router>
       {/* <div>
         <h1>Protected Image Viewer</h1>
         <HideImage imageUrl={Test} width={600} height={400} />
@@ -32,7 +41,7 @@ function App() {
         <h1>Secure Video Viewer</h1>
         <SecureCanvasVideo />
       </div> */}
-      <HLSPlayer />
+
     </>
   );
 }
