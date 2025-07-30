@@ -144,7 +144,7 @@ const BlogReader = () => {
                     value={speed}
                     onChange={(e) => setSpeed(parseFloat(e.target.value))}
                 />
-                <span> {speed.toFixed(1)}x</span>
+                <span>{speed.toFixed(1)}x</span>
             </div>
         </div>
     );
