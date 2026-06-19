@@ -1,5 +1,8 @@
 # React + Vite
 
+# ffmpeg cmd for video compress
+ffmpeg -i input.mp4 -c:v libx264 -crf 20 -preset slow -g 1 -movflags +faststart -c:a aac out.mp4
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

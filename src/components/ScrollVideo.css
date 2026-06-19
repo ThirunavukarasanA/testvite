@@ -1,0 +1,137 @@
+.scroll-video {
+  position: relative;
+  min-height: 560vh;
+  background: #000;
+  color: #fff;
+}
+
+.scroll-video__stage {
+  position: relative;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+.scroll-video__media {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  background: #000;
+}
+
+.scroll-video__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.72), transparent 40%, rgba(0, 0, 0, 0.55)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 35%, rgba(0, 0, 0, 0.72));
+  pointer-events: none;
+}
+
+.scroll-video__intro {
+  position: absolute;
+  left: clamp(24px, 5vw, 64px);
+  top: 96px;
+  z-index: 2;
+  max-width: 360px;
+}
+
+.scroll-video__intro p,
+.scroll-video__chapter p {
+  margin: 0;
+  color: #d4af37;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.scroll-video__intro span {
+  display: block;
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.scroll-video__chapters {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 clamp(24px, 5vw, 64px);
+  pointer-events: none;
+}
+
+.scroll-video__chapter {
+  position: absolute;
+  width: min(520px, calc(100vw - 48px));
+  border-left: 1px solid rgba(212, 175, 55, 0.55);
+  padding-left: 24px;
+  opacity: 0.16;
+  transform: translateY(24px);
+}
+
+.scroll-video__chapter h2 {
+  margin: 12px 0 0;
+  color: #fff;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1;
+}
+
+.scroll-video__chapter span {
+  display: block;
+  margin-top: 16px;
+  max-width: 420px;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.scroll-video__progress {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: 3;
+  width: min(520px, calc(100vw - 48px));
+  height: 1px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.scroll-video__progress div {
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: #d4af37;
+}
+
+@media (max-width: 767px) {
+  .scroll-video {
+    min-height: 420vh;
+  }
+
+  .scroll-video__intro {
+    top: 80px;
+  }
+
+  .scroll-video__chapters {
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding-bottom: 96px;
+  }
+
+  .scroll-video__chapter h2 {
+    font-size: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-video {
+    min-height: 100vh;
+  }
+}

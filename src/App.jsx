@@ -12,23 +12,18 @@ import HLSPlayer from "./components/HLSPlayer";
 import BlogReader from "./components/BlogReader";
 import BlogCombine from "./components/BlogCombine";
 import HorizontalSlider from "./components/HorizontalSlider";
+import ScrollVideo from "./components/ScrollVideo";
 
 function App() {
   return (
     <>
-      {/* <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-        </Routes>
-      </Router> */}
       <Router>
         <Routes>
           <Route path="/" element={<HideImage imageUrl={Test} width={600} height={400} />} />
           <Route path="/video-player" element={<HLSPlayer />} />
           <Route path="/blog-reader" element={<BlogCombine />} />
           <Route path="/slider" element={<HorizontalSlider />} />
+          <Route path="/scroll" element={<ScrollVideo />} />
         </Routes>
       </Router>
       {/* <div>
