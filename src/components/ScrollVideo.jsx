@@ -162,12 +162,12 @@ export default function ScrollVideo() {
           Your browser does not support the video tag.
         </video>
 
-        <div className="scroll-video__shade" />
+        {/* <div className="scroll-video__shade" /> */}
 
-        <div className="scroll-video__intro">
+        {/* <div className="scroll-video__intro">
           <p>Scroll Down / Up</p>
           <span>The timeline follows page position.</span>
-        </div>
+        </div> */}
 
         {/* <div className="scroll-video__chapters">
           {chapters.map((chapter, index) => (
