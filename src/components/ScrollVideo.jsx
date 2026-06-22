@@ -155,10 +155,10 @@ export default function ScrollVideo() {
           muted
           playsInline
           preload="auto"
-          poster="/testing.jpg"
+          poster="/poster.png"
           aria-label="Scroll controlled cinematic video"
         >
-          <source src="/out.mp4" type="video/mp4" />
+          <source src="/outt.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
 
