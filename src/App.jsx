@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import HideImage from "./components/HideImage";
-import Test from '/public/testing.jpg'
-import MacMini from '/public/EMBASSY_Village_HD.mp4'
+import Test from '/testing.jpg'
+import MacMini from '/EMBASSY_Village_HD.mp4'
 import ProtectedVideoPlayer from "./components/ProtectedVideoPlayer";
 import SecureCanvasVideo from "./components/SecureCanvasVideo";
 import HLSPlayer from "./components/HLSPlayer";

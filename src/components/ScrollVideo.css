@@ -3,6 +3,9 @@
   min-height: 560vh;
   background: #000;
   color: #fff;
+
+  /* iOS FIX — prevent elastic overscroll from breaking pin */
+  overscroll-behavior: none;
 }
 
 .scroll-video__stage {
@@ -12,6 +15,21 @@
   width: 100%;
   overflow: hidden;
   background: #000;
+  touch-action: pan-y;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Android — CSS sticky replaces GSAP pin, no fixed-layer repaint */
+.scroll-video__stage--sticky {
+  position: sticky;
+  top: 0;
+}
+
+.scroll-video {
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 .scroll-video__media {
@@ -19,14 +37,35 @@
   width: 100%;
   object-fit: cover;
   background: #000;
+
+  /* iOS FIX — GPU-accelerated video rendering */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+
+  /*
+   * iOS FIX — pointer-events: none prevents Safari from
+   * intercepting touch events on the video element, which
+   * would block scroll detection.
+   */
+  pointer-events: none;
 }
 
 .scroll-video__shade {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.72), transparent 40%, rgba(0, 0, 0, 0.55)),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 35%, rgba(0, 0, 0, 0.72));
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.72),
+      transparent 40%,
+      rgba(0, 0, 0, 0.55)
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.3),
+      transparent 35%,
+      rgba(0, 0, 0, 0.72)
+    );
   pointer-events: none;
 }
 
@@ -108,6 +147,10 @@
   transform: scaleX(0);
   transform-origin: left;
   background: #d4af37;
+
+  /* iOS FIX — GPU-composite the progress bar */
+  will-change: transform;
+  -webkit-transform: scaleX(0);
 }
 
 @media (max-width: 767px) {
